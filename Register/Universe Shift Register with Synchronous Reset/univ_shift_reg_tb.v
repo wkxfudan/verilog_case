@@ -1,0 +1,169 @@
+`timescale 1ns/1ps
+
+// simulation time: 520ns
+module univ_shift_reg_tb
+    #(parameter DW=4)
+    ();
+
+    reg clk;
+    reg sync_rst;
+    reg [1:0] ctrl;
+    reg [DW-1:0] data;
+    reg data_l;
+    reg data_h;
+    wire [DW-1:0] q;
+
+    // module under test
+    univ_shift_reg uut(
+        .clk(clk),
+        .sync_rst(sync_rst),
+        .ctrl(ctrl),
+        .data(data),
+        .data_l(data_l),
+        .data_h(data_h),
+        .q(q)
+    );
+
+    // clk
+    initial 
+        clk=0;
+    always #5 clk=~clk;
+
+    // datas
+    initial data={$random}%(2**DW);
+    always #10 data={$random}%(2**DW);
+    always #10 data_l={$random}%2;
+    always #10 data_h={$random}%2;
+
+    // input signals
+    initial
+        fork
+            sync_rst=1;
+            #10 sync_rst=0;
+
+            // test loading, left-shifting and holding
+            ctrl=2'b00;
+            #20 ctrl=2'b10;
+            #30 ctrl=2'b11;
+            #50 ctrl=2'b10;
+            #70 ctrl=2'b11;
+            #90 ctrl=2'b10;
+            #110 ctrl=2'b11;
+
+            #130 ctrl=2'b00;
+            #140 ctrl=2'b10;
+            #160 ctrl=2'b11;
+            #180 ctrl=2'b10;
+            #200 ctrl=2'b11;
+            #220 ctrl=2'b10;
+            #240 ctrl=2'b11;
+
+            // test loading, right-shifting and holding
+            #260 ctrl=2'b00;
+            #270 ctrl=2'b01;
+            #290 ctrl=2'b11;
+            #310 ctrl=2'b01;
+            #330 ctrl=2'b11;
+            #350 ctrl=2'b01;
+            #370 ctrl=2'b11;
+
+            #390 ctrl=2'b00;
+            #400 ctrl=2'b01;
+            #420 ctrl=2'b11;
+            #440 ctrl=2'b01;
+            #460 ctrl=2'b11;
+            #480 ctrl=2'b01;
+            #500 ctrl=2'b11;
+        join
+
+    // auto check
+    reg [DW-1:0] q_expect;
+    
+    initial
+        fork
+            #9 q_expect=0;
+            #19 q_expect=data;
+            #29 q_expect={q_expect[DW-2:0],data_l};
+            #39 q_expect=q_expect;
+            #49 q_expect=q_expect;
+            #59 q_expect={q_expect[DW-2:0],data_l};
+            #69 q_expect={q_expect[DW-2:0],data_l};
+            #79 q_expect=q_expect;
+            #89 q_expect=q_expect;
+            #99 q_expect={q_expect[DW-2:0],data_l};
+            #109 q_expect={q_expect[DW-2:0],data_l};
+            #119 q_expect=q_expect;
+            #129 q_expect=q_expect;
+
+            #139 q_expect=data;
+            #149 q_expect={q_expect[DW-2:0],data_l};
+            #159 q_expect={q_expect[DW-2:0],data_l};
+            #169 q_expect=q_expect;
+            #179 q_expect=q_expect;
+            #189 q_expect={q_expect[DW-2:0],data_l};
+            #199 q_expect={q_expect[DW-2:0],data_l};
+            #209 q_expect=q_expect;
+            #219 q_expect=q_expect;
+            #229 q_expect={q_expect[DW-2:0],data_l};
+            #239 q_expect={q_expect[DW-2:0],data_l};
+            #249 q_expect=q_expect;
+            #259 q_expect=q_expect;
+
+            #269 q_expect=data;
+            #279 q_expect={data_h,q_expect[DW-1:1]};
+            #289 q_expect={data_h,q_expect[DW-1:1]};
+            #299 q_expect=q_expect;
+            #309 q_expect=q_expect;
+            #319 q_expect={data_h,q_expect[DW-1:1]};
+            #329 q_expect={data_h,q_expect[DW-1:1]};
+            #339 q_expect=q_expect;
+            #349 q_expect=q_expect;
+            #359 q_expect={data_h,q_expect[DW-1:1]};
+            #369 q_expect={data_h,q_expect[DW-1:1]};
+            #379 q_expect=q_expect;
+            #389 q_expect=q_expect;
+
+            #399 q_expect=data;
+            #409 q_expect={data_h,q_expect[DW-1:1]};
+            #419 q_expect={data_h,q_expect[DW-1:1]};
+            #429 q_expect=q_expect;
+            #439 q_expect=q_expect;
+            #449 q_expect={data_h,q_expect[DW-1:1]};
+            #459 q_expect={data_h,q_expect[DW-1:1]};
+            #469 q_expect=q_expect;
+            #479 q_expect=q_expect;
+            #489 q_expect={data_h,q_expect[DW-1:1]};
+            #499 q_expect={data_h,q_expect[DW-1:1]};
+            #509 q_expect=q_expect;
+            #519 q_expect=q_expect;
+        join
+
+    
+    wire success;               // success==1 means q==q_expect
+    assign success=(q==q_expect);  
+
+    integer cycle=0;            // count "10s"
+    always #10 cycle=cycle+1; 
+
+    reg result;
+    initial result=1;
+    always #10                  // check per 10s   
+        if(cycle<=52)
+            begin        
+                result=result&success;
+                if(success)
+                    $display("%ds: passed",cycle*10);
+                else
+                    $display("------------%ds: failed------------",cycle*10);   
+            end
+    
+    initial
+        begin
+            #520;
+            if(result)
+                $display("SIMULATION PASSED");
+            else
+                $display("SIMULATION FAILED");
+        end
+endmodule
+
