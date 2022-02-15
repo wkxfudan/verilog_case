@@ -3,11 +3,11 @@
 module univ_rotate_reg
     #(parameter DW=4)
     (
-        input wire clk,
-        input wire sync_rst,
-        input wire [1:0] ctrl,
-        input wire [DW-1:0] data,
-        output reg [DW-1:0] q
+    input wire clk,
+    input wire sync_rst,
+    input wire [1:0] ctrl,
+    input wire [DW-1:0] data,
+    output reg [DW-1:0] q
     );
 
     // bit 0

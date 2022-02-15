@@ -14,7 +14,7 @@ module left_shift_reg_tb
     wire [DW-1:0] q;
 
     // module under test
-    left_shift_reg #(.DW(DW)) uut(
+    left_shift_reg uut(
         .clk(clk),
         .async_rst(async_rst),
         .load(load),
@@ -160,6 +160,7 @@ module left_shift_reg_tb
                 $display("SIMULATION PASSED");
             else
                 $display("SIMULATION successED");
+            $stop;
         end
 endmodule
 

@@ -3,13 +3,13 @@
 module left_shift_reg
     #(parameter DW=4)
     (
-        input wire clk,
-        input wire async_rst,
-        input wire load,
-        input wire en,
-        input wire [DW-1:0] data,
-        input wire data_l,
-        output reg [DW-1:0] q
+    input wire clk,
+    input wire async_rst,
+    input wire load,
+    input wire en,
+    input wire [DW-1:0] data,
+    input wire data_l,
+    output reg [DW-1:0] q
     );
 
     // bit 0

@@ -12,7 +12,7 @@ module univ_rotate_reg_tb
     wire [DW-1:0] q;
 
     // module under test
-    univ_rotate_reg #(.DW(DW)) uut(
+    univ_rotate_reg uut(
         .clk(clk),
         .sync_rst(sync_rst),
         .ctrl(ctrl),
@@ -158,6 +158,7 @@ module univ_rotate_reg_tb
                 $display("SIMULATION PASSED");
             else
                 $display("SIMULATION FAILED");
+            $stop;
         end
 endmodule
 

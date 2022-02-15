@@ -13,7 +13,7 @@ module right_rotate_reg_tb
     wire [DW-1:0] q;
 
     // module under test
-    right_rotate_reg #(.DW(DW)) uut(
+    right_rotate_reg uut(
         .clk(clk),
         .async_rst(async_rst),
         .load(load),
@@ -157,6 +157,7 @@ module right_rotate_reg_tb
                 $display("SIMULATION PASSED");
             else
                 $display("SIMULATION FAILED");
+            $stop;
         end
 endmodule
 
