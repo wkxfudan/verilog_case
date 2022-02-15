@@ -13,7 +13,7 @@ module left_rotate_reg_tb
     wire [DW-1:0] q;
 
     // module under test
-    left_rotate_reg uut(
+    left_rotate_reg #(.DW(DW)) uut(
         .clk(clk),
         .sync_rst(sync_rst),
         .load(load),

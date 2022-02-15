@@ -14,7 +14,7 @@ module right_shift_reg_tb
     wire [DW-1:0] q;
 
     // module under test
-    right_shift_reg uut(
+    right_shift_reg #(.DW(DW)) uut(
         .clk(clk),
         .sync_rst(sync_rst),
         .load(load),
