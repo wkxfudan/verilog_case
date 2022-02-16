@@ -10,9 +10,11 @@ N位2选1多路选择器
 
 测试用例与参考输出
 ---
-|序号|a|b|sel|out|
-|1|0xffffffff|0x00000000|0|0xffffffff|
-|2|0xffffffff|0x00000000|1|0x00000000|
+
+|序号 |a          |b          |sel  |out        |
+|-    |-          |-          |-    |-          |
+|1    |0xffffffff |0x00000000 |0    |0xffffffff |
+|2    |0xffffffff |0x00000000 |1    |0x00000000 |
 
 参考代码
 ---
