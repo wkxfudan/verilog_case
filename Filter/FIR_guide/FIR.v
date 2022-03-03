@@ -110,7 +110,6 @@ module fir_guide    (
             yout_t <= sum ;
         end
     end
-`endif
     assign yout  = yout_t ;
     assign valid = valid_mult_r[0];
 
