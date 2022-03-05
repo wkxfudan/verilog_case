@@ -1,4 +1,5 @@
 xvlog.pb
 xsim.dir
-a.out
+*.out
 tools
+*.vcd
