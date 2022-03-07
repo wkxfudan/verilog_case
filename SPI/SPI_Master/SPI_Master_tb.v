@@ -9,17 +9,17 @@ module SPI_Master_TB ();
     parameter CLKS_PER_HALF_BIT = 4;  // 6.25 MHz
     parameter MAIN_CLK_DELAY = 2;  // 25 MHz
 
-    logic r_Rst_L     = 1'b0;
-    logic w_SPI_Clk;
-    logic r_Clk       = 1'b0;
-    logic w_SPI_MOSI;
+    reg   r_Rst_L     = 1'b0;
+    wire   w_SPI_Clk;
+    reg   r_Clk       = 1'b0;
+    wire  w_SPI_MOSI;
 
     // Master Specific
-    logic [7:0] r_Master_TX_Byte = 0;
-    logic r_Master_TX_DV = 1'b0;
-    logic w_Master_TX_Ready;
-    logic r_Master_RX_DV;
-    logic [7:0] r_Master_RX_Byte;
+    reg   [7:0] r_Master_TX_Byte = 0;
+    reg   r_Master_TX_DV = 1'b0;
+    wire  w_Master_TX_Ready;
+    wire  r_Master_RX_DV;
+    wire  [7:0] r_Master_RX_Byte;
 
     // Clock Generators:
     always #(MAIN_CLK_DELAY) r_Clk = ~r_Clk;
@@ -48,16 +48,7 @@ module SPI_Master_TB ();
             .o_SPI_MOSI(w_SPI_MOSI)
         );
 
-
-    // Sends a single byte from master.
-    task SendSingleByte(input [7:0] data);
-        @(posedge r_Clk);
-        r_Master_TX_Byte <= data;
-        r_Master_TX_DV   <= 1'b1;
-        @(posedge r_Clk);
-        r_Master_TX_DV <= 1'b0;
-        @(posedge w_Master_TX_Ready);
-    endtask // SendSingleByte
+    `define SendSingleByte(DATA) @(posedge r_Clk); r_Master_TX_Byte <= DATA; r_Master_TX_DV <= 1'b1; @(posedge r_Clk) r_Master_TX_DV <= 1'b0; @(posedge w_Master_TX_Ready);
 
 
     initial begin
@@ -67,13 +58,13 @@ module SPI_Master_TB ();
         r_Rst_L          = 1'b1;
 
         // Test single byte
-        SendSingleByte(8'hC1);
+        `SendSingleByte(8'hC1);
         $display("Sent out 0xC1, Received 0x%X", r_Master_RX_Byte);
 
         // Test double byte
-        SendSingleByte(8'hBE);
+        `SendSingleByte(8'hBE);
         $display("Sent out 0xBE, Received 0x%X", r_Master_RX_Byte);
-        SendSingleByte(8'hEF);
+        `SendSingleByte(8'hEF);
         $display("Sent out 0xEF, Received 0x%X", r_Master_RX_Byte);
         repeat(10) @(posedge r_Clk);
         $display("Success!");
